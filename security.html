@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nebula - Web3 Infrastructure</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Inter', sans-serif; }
+.font-geist { font-family: 'Geist', sans-serif !important; }
+/*
+Animation Keyframe: Content Fade In
+*/
+@keyframes fadeSlideIn {
+0% {
+opacity: 0;
+transform: translateY(30px);
+filter: blur(8px);
+}
+100% {
+opacity: 1;
+transform: translateY(0);
+filter: blur(0px);
+}
+}
+/*
+Animation Keyframe: Column Clip Reveal
+New animation added for the background grid columns
+*/
+@keyframes columnReveal {
+0% {
+clip-path: inset(0 0 100% 0);
+opacity: 0;
+}
+100% {
+clip-path: inset(0 0 0% 0);
+opacity: 1;
+}
+}
+.col-anim {
+animation: columnReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+will-change: clip-path;
+}
+/* Staggered Delays for Grid Columns */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+.delay-6 { animation-delay: 0.6s; }
+.delay-7 { animation-delay: 0.7s; }
+/*
+Animation on Scroll State Management
+*/
+.animate-on-scroll { animation-play-state: paused !important; }
+.animate-on-scroll.animate { animation-play-state: running !important; }
+/* Animated Shiny CTA Button Styles */
+@property --gradient-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+@property --gradient-angle-offset { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+@property --gradient-percent { syntax: "<percentage>"; initial-value: 20%; inherits: false; }
+@property --gradient-shine { syntax: "<color>"; initial-value: #fb923c; inherits: false; }
+.shiny-cta {
+--gradient-angle: 0deg;
+--gradient-angle-offset: 0deg;
+--gradient-percent: 20%;
+--gradient-shine: #fb923c;
+position: relative;
+overflow: hidden;
+border-radius: 9999px;
+padding: 1.25rem 3rem;
+font-size: 1.125rem;
+line-height: 1.2;
+font-weight: 500;
+color: #ffffff;
+background: linear-gradient(#000000, #000000) padding-box,
+conic-gradient(from calc(var(--gradient-angle) - var(--gradient-angle-offset)),
+transparent 0%, #ea580c 5%, var(--gradient-shine) 15%, #ea580c 30%, transparent 40%, transparent 100%) border-box;
+border: 2px solid transparent;
+box-shadow: inset 0 0 0 1px #1a1818;
+outline: none;
+transition: --gradient-angle-offset 800ms cubic-bezier(0.25, 1, 0.5, 1), --gradient-percent 800ms cubic-bezier(0.25, 1, 0.5, 1), --gradient-shine 800ms cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s;
+cursor: pointer;
+isolation: isolate;
+outline-offset: 4px;
+z-index: 0;
+animation: border-spin 2.5s linear infinite;
+}
+@keyframes border-spin { to { --gradient-angle: 360deg; } }
+.shiny-cta:active { transform: translateY(1px); }
+.shiny-cta::before {
+content: '';
+pointer-events: none;
+position: absolute;
+left: 50%;
+top: 50%;
+transform: translate(-50%, -50%);
+z-index: 0;
+--size: calc(100% - 6px);
+--position: 2px;
+--space: 4px;
+width: var(--size);
+height: var(--size);
+background: radial-gradient(circle at var(--position) var(--position), white 0.5px, transparent 0) padding-box;
+background-size: var(--space) var(--space);
+background-repeat: space;
+mask-image: conic-gradient(from calc(var(--gradient-angle) + 45deg), black, transparent 10% 90%, black);
+border-radius: inherit;
+opacity: 0.4;
+}
+.shiny-cta::after {
+content: '';
+pointer-events: none;
+position: absolute;
+left: 50%;
+top: 50%;
+transform: translate(-50%, -50%);
+z-index: 1;
+width: 100%;
+aspect-ratio: 1;
+background: linear-gradient(-50deg, transparent, #ea580c, transparent);
+mask-image: radial-gradient(circle at bottom, transparent 40%, black);
+opacity: 0.6;
+animation: shimmer 4s linear infinite;
+}
+.shiny-cta span { position: relative; z-index: 2; display: inline-block; }
+.shiny-cta span::before {
+content: '';
+pointer-events: none;
+position: absolute;
+left: 50%;
+top: 50%;
+transform: translate(-50%, -50%);
+z-index: -1;
+--size: calc(100% + 1rem);
+width: var(--size);
+height: var(--size);
+box-shadow: inset 0 -1ex 2rem 4px #ea580c;
+opacity: 0;
+border-radius: inherit;
+transition: opacity 800ms cubic-bezier(0.25, 1, 0.5, 1);
+animation: breathe 4.5s linear infinite;
+}
+@keyframes shimmer { to { transform: translate(-50%, -50%) rotate(360deg); } }
+@keyframes breathe {
+0%, 100% { transform: translate(-50%, -50%) scale(1); }
+50% { transform: translate(-50%, -50%) scale(1.20); }
+}
+/* Progressive Blur CSS */
+.gradient-blur {
+position: fixed;
+z-index: 5;
+inset: 0 0 auto 0;
+height: 12%;
+pointer-events: none;
+}
+.gradient-blur>div, .gradient-blur::before, .gradient-blur::after { position: absolute; inset: 0; }
+.gradient-blur::before { content: ""; z-index: 1; backdrop-filter: blur(0.5px); mask: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 12.5%, rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 0) 37.5%); }
+.gradient-blur>div:nth-of-type(1) { z-index: 2; backdrop-filter: blur(1px); mask: linear-gradient(to top, rgba(0, 0, 0, 0) 12.5%, rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 1) 37.5%, rgba(0, 0, 0, 0) 50%); }
+.gradient-blur>div:nth-of-type(2) { z-index: 3; backdrop-filter: blur(2px); mask: linear-gradient(to top, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 1) 37.5%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 62.5%); }
+.gradient-blur>div:nth-of-type(3) { z-index: 4; backdrop-filter: blur(4px); mask: linear-gradient(to top, rgba(0, 0, 0, 0) 37.5%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 1) 62.5%, rgba(0, 0, 0, 0) 75%); }
+.gradient-blur>div:nth-of-type(4) { z-index: 5; backdrop-filter: blur(8px); mask: linear-gradient(to top, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1) 62.5%, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0) 87.5%); }
+.gradient-blur>div:nth-of-type(5) { z-index: 6; backdrop-filter: blur(16px); mask: linear-gradient(to top, rgba(0, 0, 0, 0) 62.5%, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 1) 87.5%, rgba(0, 0, 0, 0) 100%); }
+.gradient-blur>div:nth-of-type(6) { z-index: 7; backdrop-filter: blur(32px); mask: linear-gradient(to top, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 1) 87.5%, rgba(0, 0, 0, 1) 100%); }
+.gradient-blur::after { content: ""; z-index: 8; backdrop-filter: blur(64px); mask: linear-gradient(to top, rgba(0, 0, 0, 0) 87.5%, rgba(0, 0, 0, 1) 100%); }
+</style>
+<script>
+(function () {
+const once = true;
+if (!window.__inViewIO) {
+window.__inViewIO = new IntersectionObserver((entries) => {
+entries.forEach((entry) => {
+if (entry.isIntersecting) {
+entry.target.classList.add("animate");
+if (once) window.__inViewIO.unobserve(entry.target);
+}
+});
+}, { threshold: 0.1, rootMargin: "0px 0px -5% 0px" });
+}
+window.initInViewAnimations = function (selector = ".animate-on-scroll") {
+document.querySelectorAll(selector).forEach((el) => {
+window.__inViewIO.observe(el);
+});
+};
+document.addEventListener("DOMContentLoaded", () => initInViewAnimations());
+})();
+</script>
+<meta name="disabled-font-classes" content="font-roboto,font-montserrat,font-poppins,font-playfair,font-instrument-serif,font-merriweather,font-bricolage,font-jakarta,font-space-grotesk,font-work-sans,font-pt-serif,font-geist-mono,font-space-mono,font-quicksand,font-nunito">
+<style id="aura-editor-visibility-style">
+.invisible { visibility: hidden !important; }
+</style>
+<script>
+// Configure Tailwind to include our custom 3D transform utilities
+tailwind.config = {
+theme: {
+extend: {
+// Add any custom theme extensions here if needed
+}
+},
+plugins: [
+function({ addUtilities }) {
+const rotateXUtilities = {};
+const rotateYUtilities = {};
+const rotateZUtilities = {};
+const rotateValues = [0, 5, 10, 15, 20, 30, 45, 75];
+// Generate rotate-x utilities
+rotateValues.forEach((value) => {
+rotateXUtilities[`.rotate-x-${value}`] = {
+'--tw-rotate-x': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateXUtilities[`.-rotate-x-${value}`] = {
+'--tw-rotate-x': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Generate rotate-y utilities
+rotateValues.forEach((value) => {
+rotateYUtilities[`.rotate-y-${value}`] = {
+'--tw-rotate-y': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateYUtilities[`.-rotate-y-${value}`] = {
+'--tw-rotate-y': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Generate rotate-z utilities
+rotateValues.forEach((value) => {
+rotateZUtilities[`.rotate-z-${value}`] = {
+'--tw-rotate-z': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateZUtilities[`.-rotate-z-${value}`] = {
+'--tw-rotate-z': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\\s+/g, ' ').trim(),
+};
+}
+});
+// Perspective utilities
+const perspectiveUtilities = {
+".perspective-none": { perspective: "none" },
+".perspective-dramatic": { perspective: "100px" },
+".perspective-near": { perspective: "300px" },
+".perspective-normal": { perspective: "500px" },
+".perspective-midrange": { perspective: "800px" },
+".perspective-distant": { perspective: "1200px" },
+};
+// Transform style utilities
+const transformStyleUtilities = {
+".transform-style-preserve-3d": { "transform-style": "preserve-3d" },
+".transform-style-flat": { "transform-style": "flat" },
+};
+addUtilities({
+...rotateXUtilities,
+...rotateYUtilities,
+...rotateZUtilities,
+...perspectiveUtilities,
+...transformStyleUtilities,
+});
+}
+]
+};
+</script>
+<link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist">
+.font-geist { font-family: 'Geist', sans-serif !important; }
+</style><link id="all-fonts-link-font-roboto" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-roboto">
+.font-roboto { font-family: 'Roboto', sans-serif !important; }
+</style><link id="all-fonts-link-font-montserrat" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-montserrat">
+.font-montserrat { font-family: 'Montserrat', sans-serif !important; }
+</style><link id="all-fonts-link-font-poppins" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-poppins">
+.font-poppins { font-family: 'Poppins', sans-serif !important; }
+</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&amp;display=swap"><style id="all-fonts-style-font-playfair">
+.font-playfair { font-family: 'Playfair Display', serif !important; }
+</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-instrument-serif">
+.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }
+</style><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&amp;display=swap"><style id="all-fonts-style-font-merriweather">
+.font-merriweather { font-family: 'Merriweather', serif !important; }
+</style><link id="all-fonts-link-font-bricolage" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-bricolage">
+.font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }
+</style><link id="all-fonts-link-font-jakarta" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-jakarta">
+.font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+</style><link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-manrope">
+.font-manrope { font-family: 'Manrope', sans-serif !important; }
+</style><link id="all-fonts-link-font-space-grotesk" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-space-grotesk">
+.font-space-grotesk { font-family: 'Space Grotesk', sans-serif !important; }
+</style><link id="all-fonts-link-font-work-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-work-sans">
+.font-work-sans { font-family: 'Work Sans', sans-serif !important; }
+</style><link id="all-fonts-link-font-pt-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-pt-serif">
+.font-pt-serif { font-family: 'PT Serif', serif !important; }
+</style><link id="all-fonts-link-font-geist-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist-mono">
+.font-geist-mono { font-family: 'Geist Mono', monospace !important; }
+</style><link id="all-fonts-link-font-space-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-space-mono">
+.font-space-mono { font-family: 'Space Mono', monospace !important; }
+</style><link id="all-fonts-link-font-quicksand" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-quicksand">
+.font-quicksand { font-family: 'Quicksand', sans-serif !important; }
+</style><link id="all-fonts-link-font-nunito" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-nunito">
+.font-nunito { font-family: 'Nunito', sans-serif !important; }
+</style><link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist">
+.font-geist { font-family: 'Geist', sans-serif !important; }
+</style><link id="all-fonts-link-font-roboto" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-roboto">
+.font-roboto { font-family: 'Roboto', sans-serif !important; }
+</style><link id="all-fonts-link-font-montserrat" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-montserrat">
+.font-montserrat { font-family: 'Montserrat', sans-serif !important; }
+</style><link id="all-fonts-link-font-poppins" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-poppins">
+.font-poppins { font-family: 'Poppins', sans-serif !important; }
+</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&amp;display=swap"><style id="all-fonts-style-font-playfair">
+.font-playfair { font-family: 'Playfair Display', serif !important; }
+</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-instrument-serif">
+.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }
+</style><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&amp;display=swap"><style id="all-fonts-style-font-merriweather">
+.font-merriweather { font-family: 'Merriweather', serif !important; }
+</style><link id="all-fonts-link-font-bricolage" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-bricolage">
+.font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }
+</style><link id="all-fonts-link-font-jakarta" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-jakarta">
+.font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+</style><link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-manrope">
+.font-manrope { font-family: 'Manrope', sans-serif !important; }
+</style><link id="all-fonts-link-font-space-grotesk" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-space-grotesk">
+.font-space-grotesk { font-family: 'Space Grotesk', sans-serif !important; }
+</style><link id="all-fonts-link-font-work-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-work-sans">
+.font-work-sans { font-family: 'Work Sans', sans-serif !important; }
+</style><link id="all-fonts-link-font-pt-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-pt-serif">
+.font-pt-serif { font-family: 'PT Serif', serif !important; }
+</style><link id="all-fonts-link-font-geist-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist-mono">
+.font-geist-mono { font-family: 'Geist Mono', monospace !important; }
+</style><link id="all-fonts-link-font-space-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-space-mono">
+.font-space-mono { font-family: 'Space Mono', monospace !important; }
+</style><link id="all-fonts-link-font-quicksand" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-quicksand">
+.font-quicksand { font-family: 'Quicksand', sans-serif !important; }
+</style><link id="all-fonts-link-font-nunito" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-nunito">
+.font-nunito { font-family: 'Nunito', sans-serif !important; }
+</style><link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist">
+.font-geist { font-family: 'Geist', sans-serif !important; }
+</style><link id="all-fonts-link-font-roboto" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-roboto">
+.font-roboto { font-family: 'Roboto', sans-serif !important; }
+</style><link id="all-fonts-link-font-montserrat" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-montserrat">
+.font-montserrat { font-family: 'Montserrat', sans-serif !important; }
+</style><link id="all-fonts-link-font-poppins" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-poppins">
+.font-poppins { font-family: 'Poppins', sans-serif !important; }
+</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&amp;display=swap"><style id="all-fonts-style-font-playfair">
+.font-playfair { font-family: 'Playfair Display', serif !important; }
+</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-instrument-serif">
+.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }
+</style><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&amp;display=swap"><style id="all-fonts-style-font-merriweather">
+.font-merriweather { font-family: 'Merriweather', serif !important; }
+</style><link id="all-fonts-link-font-bricolage" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-bricolage">
+.font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }
+</style><link id="all-fonts-link-font-jakarta" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-jakarta">
+.font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+</style><link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-manrope">
+.font-manrope { font-family: 'Manrope', sans-serif !important; }
+</style><link id="all-fonts-link-font-space-grotesk" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-space-grotesk">
+.font-space-grotesk { font-family: 'Space Grotesk', sans-serif !important; }
+</style><link id="all-fonts-link-font-work-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-work-sans">
+.font-work-sans { font-family: 'Work Sans', sans-serif !important; }
+</style><link id="all-fonts-link-font-pt-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-pt-serif">
+.font-pt-serif { font-family: 'PT Serif', serif !important; }
+</style><link id="all-fonts-link-font-geist-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist-mono">
+.font-geist-mono { font-family: 'Geist Mono', monospace !important; }
+</style><link id="all-fonts-link-font-space-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-space-mono">
+.font-space-mono { font-family: 'Space Mono', monospace !important; }
+</style><link id="all-fonts-link-font-quicksand" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-quicksand">
+.font-quicksand { font-family: 'Quicksand', sans-serif !important; }
+</style><link id="all-fonts-link-font-nunito" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-nunito">
+.font-nunito { font-family: 'Nunito', sans-serif !important; }
+</style><link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist">
+.font-geist { font-family: 'Geist', sans-serif !important; }
+</style><link id="all-fonts-link-font-roboto" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-roboto">
+.font-roboto { font-family: 'Roboto', sans-serif !important; }
+</style><link id="all-fonts-link-font-montserrat" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-montserrat">
+.font-montserrat { font-family: 'Montserrat', sans-serif !important; }
+</style><link id="all-fonts-link-font-poppins" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-poppins">
+.font-poppins { font-family: 'Poppins', sans-serif !important; }
+</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&amp;display=swap"><style id="all-fonts-style-font-playfair">
+.font-playfair { font-family: 'Playfair Display', serif !important; }
+</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-instrument-serif">
+.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }
+</style><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&amp;display=swap"><style id="all-fonts-style-font-merriweather">
+.font-merriweather { font-family: 'Merriweather', serif !important; }
+</style><link id="all-fonts-link-font-bricolage" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-bricolage">
+.font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }
+</style><link id="all-fonts-link-font-jakarta" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-jakarta">
+.font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+</style><link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-manrope">
+.font-manrope { font-family: 'Manrope', sans-serif !important; }
+</style><link id="all-fonts-link-font-space-grotesk" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-space-grotesk">
+.font-space-grotesk { font-family: 'Space Grotesk', sans-serif !important; }
+</style><link id="all-fonts-link-font-work-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-work-sans">
+.font-work-sans { font-family: 'Work Sans', sans-serif !important; }
+</style><link id="all-fonts-link-font-pt-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-pt-serif">
+.font-pt-serif { font-family: 'PT Serif', serif !important; }
+</style><link id="all-fonts-link-font-geist-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist-mono">
+.font-geist-mono { font-family: 'Geist Mono', monospace !important; }
+</style><link id="all-fonts-link-font-space-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-space-mono">
+.font-space-mono { font-family: 'Space Mono', monospace !important; }
+</style><link id="all-fonts-link-font-quicksand" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-quicksand">
+.font-quicksand { font-family: 'Quicksand', sans-serif !important; }
+</style><link id="all-fonts-link-font-nunito" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-nunito">
+.font-nunito { font-family: 'Nunito', sans-serif !important; }
+</style><link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist">
+.font-geist { font-family: 'Geist', sans-serif !important; }
+</style><link id="all-fonts-link-font-manrope" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-manrope">
+.font-manrope { font-family: 'Manrope', sans-serif !important; }
+</style><link id="all-fonts-link-font-newsreader" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400..800&amp;display=swap"><style id="all-fonts-style-font-newsreader">
+.font-newsreader { font-family: 'Newsreader', serif !important; }
+</style><link id="all-fonts-link-font-google-sans-flex" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-google-sans-flex">
+.font-google-sans-flex { font-family: 'Google Sans Flex', sans-serif !important; }
+</style><link id="all-fonts-link-font-oswald" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-oswald">
+.font-oswald { font-family: 'Oswald', sans-serif !important; }
+</style><link id="all-fonts-link-font-dm-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-dm-sans">
+.font-dm-sans { font-family: 'DM Sans', sans-serif !important; }
+</style><link id="all-fonts-link-font-cormorant" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-cormorant">
+.font-cormorant { font-family: 'Cormorant Garamond', serif !important; }
+</style><style id="border-gradient-shared-style">
+[style*="--border-gradient"]::before {
+content: "";
+position: absolute;
+inset: 0;
+padding: 1px;
+border-radius: var(--border-radius-before, inherit);
+-webkit-mask: linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite: xor;
+mask-composite: exclude;
+background: var(--border-gradient);
+pointer-events: none;
+}</style>  <style>
+/* 3D Transform utilities */
+.perspective-none { perspective: none !important; }
+.perspective-dramatic { perspective: 100px !important; }
+.perspective-near { perspective: 300px !important; }
+.perspective-normal { perspective: 500px !important; }
+.perspective-midrange { perspective: 800px !important; }
+.perspective-distant { perspective: 1200px !important; }
+.transform-style-preserve-3d { transform-style: preserve-3d !important; }
+.transform-style-flat { transform-style: flat !important; }
+</style></head>
+  <body class="antialiased overflow-x-hidden selection:bg-orange-500/30 selection:text-orange-200 text-white bg-black">
+    <!-- Background (component) added by Aura -->
+    <div class="aura-background-component fixed z-10 pointer-events-none opacity-50 mix-blend-screen w-full h-screen top-0 saturate-0 brightness-50" data-alpha-mask="80" style="mask-image: linear-gradient(180deg, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(180deg, transparent, black 0%, black 80%, transparent);">
+      <div class="aura-background-component top-0 w-full -z-10 absolute h-full">
+        <div data-us-project="bKN5upvoulAmWvInmHza" class="absolute w-full h-full left-0 top-0 -z-10"></div>
+        <script type="text/javascript">
+          !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
+        </script>
+      </div>
+    </div>
+
+    <!-- Progressive Blur Top -->
+    <div class="gradient-blur">
+      <div></div>
+      <div class=""></div>
+      <div></div>
+      <div class=""></div>
+      <div></div>
+      <div></div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="fixed flex w-full z-50 pt-6 pr-4 pl-4 top-0 left-0 justify-center">
+      <nav class="flex md:gap-12 md:w-auto shadow-black/50 md:pl-6 md:gap-x-8 z-50 group bg-black/60 w-full max-w-5xl rounded-full pt-2 pr-2 pb-2 pl-4 shadow-2xl backdrop-blur-xl gap-x-3 gap-y-8 items-center justify-between" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2)); --border-radius-before: 9999px">
+  <div class="flex items-center gap-2 shrink-0">
+    <span class="text-base font-medium tracking-tight flex items-center text-white" onclick="window.location.href='home-page.html'" role="button">
+      <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2bcdd201-cf91-4148-b0a2-fe375ba529d0_1600w.png?w=800&amp;q=80" alt="TERN" class="cursor-pointer w-auto h-7 object-contain rounded-full" onclick="window.location.href='home-page.html';window.location.href='index.html';window.location.href='index.html'" role="button">
+    </span>
+  </div>
+
+  <!-- Desktop Navigation -->
+  <div class="hidden md:flex items-center gap-6">
+    <a href="index.html" class="transition-colors hover:text-white text-xs font-medium text-gray-400">Home</a>
+    <a href="platform.html" class="transition-colors text-xs font-medium hover:text-white text-gray-400">Platform</a>
+    <a href="security.html" class="transition-colors text-xs font-medium hover:text-white text-gray-400">Security</a>
+    <a href="#" class="transition-colors text-xs font-medium hover:text-white text-gray-400">Company</a>
+  </div>
+
+  <div class="flex items-center gap-2 md:gap-4 shrink-0">
+    <!-- Action Button -->
+    <button class="group/btn inline-flex overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(255,255,255,0.1)] rounded-full pt-[1px] pr-[1px] pb-[1px] pl-[1px] relative items-center justify-center" onclick="window.location.href='book-a-demo.html'" role="button">
+      <!-- Spinning Border Beam -->
+      <span class="absolute inset-[-100%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,transparent_75%,#ffffff_100%)] opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100"></span>
+      <!-- Default Static Border -->
+      <span class="transition-opacity duration-300 group-hover/btn:opacity-0 rounded-full absolute top-0 right-0 bottom-0 left-0 bg-zinc-800"></span>
+      <!-- Button Content -->
+      <span class="flex items-center justify-center gap-2 uppercase transition-colors duration-300 group-hover/btn:text-white text-xs font-medium tracking-widest bg-gradient-to-b w-full h-full rounded-full pt-2.5 px-4 md:pr-6 pb-2.5 md:pl-6 relative shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] text-zinc-400 from-zinc-800 to-zinc-950">
+        <span class="relative z-10 whitespace-nowrap">Book Demo</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="relative z-10 transition-transform duration-300 group-hover/btn:translate-x-0.5">
+          <path d="M5 12h14"></path>
+          <path d="m12 5 7 7-7 7"></path>
+        </svg>
+      </span>
+    </button>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="md:hidden relative flex items-center justify-center w-9 h-9 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 transition-all border border-transparent hover:border-white/5" onclick="const menu = document.getElementById('mobile-drawer'); const icon = this.querySelector('svg'); const isOpen = !menu.classList.contains('hidden'); if(isOpen) { menu.classList.remove('opacity-100', 'translate-y-0'); menu.classList.add('opacity-0', '-translate-y-2'); setTimeout(() =&gt; menu.classList.add('hidden'), 300); } else { menu.classList.remove('hidden'); setTimeout(() =&gt; { menu.classList.remove('opacity-0', '-translate-y-2'); menu.classList.add('opacity-100', 'translate-y-0'); }, 10); }">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="4" x2="20" y1="12" y2="12"></line>
+        <line x1="4" x2="20" y1="6" y2="6"></line>
+        <line x1="4" x2="20" y1="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile Drawer Overlay -->
+  <div id="mobile-drawer" class="hidden absolute top-[calc(100%+8px)] left-0 right-0 p-1.5 z-50 transform transition-all duration-300 ease-out opacity-0 -translate-y-2 origin-top">
+    <div class="bg-black/90 backdrop-blur-xl border border-white/5 rounded-[2rem] p-4 flex flex-col shadow-2xl overflow-hidden">
+      <a href="home-page.html" class="flex items-center justify-between p-4 rounded-2xl hover:bg-white/5 transition-colors group">
+        <span class="text-sm font-medium text-zinc-300 group-hover:text-white">Home</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-600 group-hover:text-white transition-colors">
+          <path d="m9 18 6-6-6-6"></path>
+        </svg>
+      </a>
+      <div class="h-px w-full bg-white/5 mx-auto"></div>
+      <a href="platform.html" class="flex items-center justify-between p-4 rounded-2xl hover:bg-white/5 transition-colors group">
+        <span class="text-sm font-medium text-zinc-300 group-hover:text-white">Platform</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-600 group-hover:text-white transition-colors">
+          <path d="m9 18 6-6-6-6"></path>
+        </svg>
+      </a>
+      <div class="h-px w-full bg-white/5 mx-auto"></div>
+      <a href="security.html" class="flex items-center justify-between p-4 rounded-2xl hover:bg-white/5 transition-colors group">
+        <span class="text-sm font-medium text-zinc-300 group-hover:text-white">Security</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-600 group-hover:text-white transition-colors">
+          <path d="m9 18 6-6-6-6"></path>
+        </svg>
+      </a>
+      <div class="h-px w-full bg-white/5 mx-auto"></div>
+      <a href="#" class="flex items-center justify-between p-4 rounded-2xl hover:bg-white/5 transition-colors group">
+        <span class="text-sm font-medium text-zinc-300 group-hover:text-white">Company</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-600 group-hover:text-white transition-colors">
+          <path d="m9 18 6-6-6-6"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</nav>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex flex-col overflow-hidden w-full relative items-center justify-center pt-24" style="mask-image: linear-gradient(180deg, transparent, black 0%, black 95%, transparent); -webkit-mask-image: linear-gradient(180deg, transparent, black 0%, black 95%, transparent);">
+      <!-- Background Effects -->
+      <div class="absolute inset-0 -z-20">
+        <div class="-translate-x-1/2 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/10 via-zinc-900/20 to-black w-[120%] h-[80%] absolute left-1"></div>
+        <div class="opacity-20 mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')] relative top-0 right-0 bottom-0 left-0"></div>
+      </div>
+
+      <!-- Grid/Curtain Structure with Column-by-Column Clip Animation -->
+      <div class="absolute inset-0 w-full h-full grid grid-cols-1 md:grid-cols-7 gap-0 -z-10 pointer-events-none">
+        <div class="relative h-full hidden md:block border-r border-white/5 col-anim delay-1">
+          <div class="absolute bottom-0 left-0 right-0 bg-black h-[75%] border-t border-white/10 shadow-[0_-20px_60px_-10px_rgba(0,0,0,0.8)]"></div>
+        </div>
+        <div class="relative h-full hidden md:block border-r border-white/5 col-anim delay-2">
+          <div class="absolute bottom-0 left-0 right-0 bg-black h-[65%] border-t border-white/10 shadow-[0_-20px_60px_-10px_rgba(0,0,0,0.8)]"></div>
+        </div>
+        <div class="relative h-full hidden md:block border-r border-white/5 col-anim delay-3">
+          <div class="absolute bottom-0 left-0 right-0 bg-black h-[55%] border-t border-white/10 shadow-[0_-20px_60px_-10px_rgba(0,0,0,0.8)]"></div>
+        </div>
+        <div class="relative h-full border-r border-white/5 md:border-none col-anim delay-4">
+          <div class="absolute bottom-0 left-0 right-0 bg-black h-[45%] border-t border-white/10 shadow-[0_-20px_60px_-10px_rgba(0,0,0,0.8)]"></div>
+          <div class="absolute top-[20%] left-0 right-0 h-[30%] bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
+        </div>
+        <div class="relative h-full hidden md:block border-l border-white/5 col-anim delay-5">
+          <div class="absolute bottom-0 left-0 right-0 bg-black h-[55%] border-t border-white/10 shadow-[0_-20px_60px_-10px_rgba(0,0,0,0.8)]"></div>
+        </div>
+        <div class="relative h-full hidden md:block border-l border-white/5 col-anim delay-6">
+          <div class="absolute bottom-0 left-0 right-0 bg-black h-[65%] border-t border-white/10 shadow-[0_-20px_60px_-10px_rgba(0,0,0,0.8)]"></div>
+        </div>
+        <div class="relative h-full hidden md:block border-l border-white/5 col-anim delay-7">
+          <div class="absolute bottom-0 left-0 right-0 bg-black h-[75%] border-t border-white/10 shadow-[0_-20px_60px_-10px_rgba(0,0,0,0.8)]"></div>
+        </div>
+      </div>
+
+      <!-- Content Container -->
+
+      <!-- Logos Footer -->
+
+      <div class="w-full max-w-7xl px-6 z-10 relative flex flex-col items-center justify-center">
+        <!-- Header -->
+        <div class="flex flex-col text-center items-center mb-12">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-orange-500/20 bg-orange-500/5 mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24" data-icon="solar:star-bold-duotone" class="iconify text-orange-500 iconify--solar">
+              <path fill="currentColor" d="M18.483 16.767A8.5 8.5 0 0 1 8.118 7.081a1 1 0 0 1-.113.097c-.28.213-.63.292-1.33.45l-.635.144c-2.46.557-3.69.835-3.983 1.776c-.292.94.546 1.921 2.223 3.882l.434.507c.476.557.715.836.822 1.18c.107.345.071.717-.001 1.46l-.066.677c-.253 2.617-.38 3.925.386 4.506s1.918.052 4.22-1.009l.597-.274c.654-.302.981-.452 1.328-.452s.674.15 1.329.452l.595.274c2.303 1.06 3.455 1.59 4.22 1.01c.767-.582.64-1.89.387-4.507z"></path>
+              <path fill="currentColor" d="m9.153 5.408l-.328.588c-.36.646-.54.969-.82 1.182q.06-.045.113-.097a8.5 8.5 0 0 0 10.366 9.686l-.02-.19c-.071-.743-.107-1.115 0-1.46c.107-.344.345-.623.822-1.18l.434-.507c1.677-1.96 2.515-2.941 2.222-3.882c-.292-.941-1.522-1.22-3.982-1.776l-.636-.144c-.699-.158-1.049-.237-1.33-.45c-.28-.213-.46-.536-.82-1.182l-.327-.588C13.58 3.136 12.947 2 12 2s-1.58 1.136-2.847 3.408" opacity=".5" class=""></path>
+            </svg>
+            <span class="text-xs font-semibold text-orange-200 uppercase tracking-widest font-sans">
+              Trust Center
+            </span>
+          </div>
+          <h2 class="md:text-7xl text-5xl font-medium text-white tracking-tighter font-manrope mb-6">
+            Built to Global Healthcare Standards
+          </h2>
+          <p class="text-xl text-gray-400 font-sans max-w-2xl leading-relaxed">
+            TERN ensures data integrity through encryption at rest and in
+            transit, with full audit trails for every staffing decision.
+          </p>
+        </div>
+
+        <!-- Grid Layout -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 mb-12 pt-4 pr-4 pb-4 pl-4 gap-6" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1))">
+  
+  <!-- Left Main Card: Verified Certifications -->
+  <div class="group hover:bg-zinc-900/60 transition-all duration-500 bg-zinc-900/40 rounded-[2.5rem] p-8 md:p-10 relative backdrop-blur-sm flex flex-col justify-between gap-8 h-full" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)); --border-radius-before: 2.5rem">
+    <div class="group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-bl from-emerald-500/5 via-transparent to-transparent opacity-0 rounded-[2.5rem] absolute top-0 right-0 bottom-0 left-0"></div>
+    
+    <!-- Header -->
+    <div class="relative z-10 space-y-2">
+      <h3 class="text-3xl font-semibold text-white tracking-tight font-manrope">
+        Verified Certifications
+      </h3>
+      <p class="text-zinc-400 font-sans max-w-md text-sm leading-relaxed">
+        Our infrastructure is rigorously audited to meet international security standards.
+      </p>
+    </div>
+
+    <!-- Internal Grid -->
+    <div class="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <!-- Card 1: ISO 27001 -->
+      <div class="p-6 rounded-2xl bg-zinc-950/40 border border-white/5 flex flex-col items-center justify-center text-center gap-4 hover:bg-zinc-900/60 hover:border-white/10 transition-all duration-300 group/item relative overflow-hidden">
+        <div class="flex group-hover/item:scale-110 transition-transform duration-500 text-blue-400 bg-blue-500/10 w-24 h-24 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/ee58f05c-805d-42d4-b4a9-9c00e9da5032_3840w.png)] bg-contain border-blue-500/10 border rounded-full items-center justify-center">
+          
+        </div>
+        <div>
+          <h4 class="text-white font-semibold font-manrope whitespace-nowrap text-lg">ISO 27001</h4>
+          <span class="text-[10px] uppercase tracking-widest text-blue-400 font-semibold mt-1 block">Certified</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Cyber Essentials -->
+      <div class="p-6 rounded-2xl bg-zinc-950/40 border border-white/5 flex flex-col items-center justify-center text-center gap-4 hover:bg-zinc-900/60 hover:border-white/10 transition-all duration-300 group/item relative overflow-hidden">
+        <div class="flex group-hover/item:scale-110 transition-transform duration-500 text-emerald-400 bg-emerald-500/10 w-24 h-24 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/447bddff-e8f5-4914-a4ed-ab06a540e7ff_3840w.png)] bg-contain border-emerald-500/10 border rounded-full items-center justify-center">
+          
+        </div>
+        <div>
+          <h4 class="text-white font-semibold font-manrope whitespace-nowrap text-lg">Cyber Essentials</h4>
+          <span class="text-[10px] uppercase tracking-widest text-emerald-400 font-semibold mt-1 block">Certified</span>
+        </div>
+      </div>
+
+      <!-- Card 3: UK GDPR -->
+      <div class="p-6 rounded-2xl bg-zinc-950/40 border border-white/5 flex flex-col items-center justify-center text-center gap-4 hover:bg-zinc-900/60 hover:border-white/10 transition-all duration-300 group/item relative overflow-hidden">
+        <div class="flex group-hover/item:scale-110 transition-transform duration-500 text-white bg-zinc-800/50 w-24 h-24 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4a04ed62-08c4-4292-a185-6deeaa28b85f_3840w.jpg?w=800&amp;q=80)] bg-cover bg-center border-white/10 border rounded-full items-center justify-center">
+          
+        </div>
+        <div>
+          <h4 class="text-white font-semibold font-manrope whitespace-nowrap text-lg">UK GDPR</h4>
+          <span class="text-[10px] uppercase tracking-widest text-zinc-400 font-semibold mt-1 block">Compliant</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6 mt-auto border-t border-white/5 pt-8">
+      <blockquote class="pl-4 border-l-2 border-emerald-500 text-zinc-300 italic max-w-sm text-sm leading-relaxed">
+        "We ensure rigorous data protection and compliance standards for all clinical workforce operations."
+      </blockquote>
+      <div class="flex items-center gap-2 text-emerald-500 shrink-0 bg-emerald-500/5 px-4 py-2 rounded-full border border-emerald-500/20">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          <path d="m9 12 2 2 4-4"></path>
+        </svg>
+        <span class="font-semibold text-xs uppercase tracking-wide">Active &amp; Verified</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Main Card: Compliance Roadmap -->
+  <div class="group hover:bg-zinc-900/60 transition-all duration-500 bg-zinc-900/40 rounded-[2.5rem] p-8 md:p-10 relative backdrop-blur-sm flex flex-col justify-between gap-8 h-full" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)); --border-radius-before: 2.5rem">
+    <div class="absolute top-0 right-0 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+    
+    <!-- Header -->
+    <div class="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-4">
+      <div class="space-y-2">
+        <h3 class="text-3xl font-semibold text-white tracking-tight font-manrope">
+          Compliance Roadmap
+        </h3>
+        <p class="text-zinc-400 font-sans max-w-xs text-sm leading-relaxed">
+          Actively engaged in audits and implementation.
+        </p>
+      </div>
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 backdrop-blur-md self-start">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+        </span>
+        <span class="text-[10px] uppercase font-bold text-orange-200 tracking-wide font-sans">
+          Verification Underway
+        </span>
+      </div>
+    </div>
+
+    <!-- Internal Grid -->
+    <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-4 h-full">
+      <!-- Card 1: HIPAA -->
+      <div class="p-8 rounded-2xl bg-zinc-950/40 border border-white/5 flex flex-col items-center justify-between text-center gap-6 hover:bg-zinc-900/60 hover:border-white/10 transition-all duration-300 group/item relative overflow-hidden grayscale opacity-50 hover:grayscale-0 hover:opacity-100">
+        <div class="flex group-hover/item:scale-110 transition-transform duration-500 text-indigo-400 bg-indigo-500/10 w-28 h-28 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/9efd5b05-cf9e-43fa-b79b-e9e163ad6333_3840w.png?w=800&amp;q=80)] bg-cover border-indigo-500/10 border rounded-full items-center justify-center">
+          
+        </div>
+        <div class="w-full">
+          <h4 class="text-white font-semibold font-manrope whitespace-nowrap text-xl mb-4">HIPAA</h4>
+          <div class="flex items-center justify-between text-[10px] text-indigo-300 uppercase tracking-wider font-semibold mb-2">
+            <span>Status</span>
+            <span>In Review</span>
+          </div>
+          <div class="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
+            <div class="h-full w-3/4 bg-indigo-500 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: DPIA -->
+      <div class="p-8 rounded-2xl bg-zinc-950/40 border border-white/5 flex flex-col items-center justify-between text-center gap-6 hover:bg-zinc-900/60 hover:border-white/10 transition-all duration-300 group/item relative overflow-hidden grayscale opacity-50 hover:grayscale-0 hover:opacity-100">
+        <div class="flex group-hover/item:scale-110 transition-transform duration-500 text-purple-400 bg-purple-500/10 w-28 h-28 bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/75591abf-4abf-4d54-ad34-3a05f47188ec_3840w.jpg?w=800&amp;q=80)] bg-contain border-purple-500/10 border rounded-full items-center justify-center">
+          
+        </div>
+        <div class="w-full">
+          <h4 class="text-white font-semibold font-manrope whitespace-nowrap text-xl mb-4">DPIA</h4>
+          <div class="flex items-center justify-between text-[10px] text-purple-300 uppercase tracking-wider font-semibold mb-2">
+            <span>Status</span>
+            <span>Ongoing</span>
+          </div>
+          <div class="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
+            <div class="h-full w-full bg-purple-500 rounded-full animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+      </div>
+    </section>
+
+    <section class="z-20 w-full max-w-7xl mr-auto mb-32 ml-auto pr-6 pl-6 relative mt-20">
+      <div class="grid lg:grid-cols-12 gap-x-16 gap-y-16 items-start">
+        <!-- CTA Text Side -->
+        <div class="lg:col-span-5 pt-4">
+          <h2 class="text-5xl md:text-6xl font-medium text-white tracking-tighter font-manrope mb-6 leading-[1.1]">
+            Discuss your workforce requirements.
+          </h2>
+          <p class="leading-relaxed text-lg text-zinc-400 max-w-md" style="">
+            Speak with our team today.
+          </p>
+        </div>
+
+        <!-- Form Side -->
+        <div class="lg:col-span-7">
+          <div class="md:p-10 overflow-hidden bg-zinc-900/40 border-white/10 border rounded-3xl pt-8 pr-8 pb-8 pl-8 relative shadow-2xl backdrop-blur-xl">
+            <!-- Background Gradient -->
+            <div class="absolute top-0 right-0 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl -z-10 pointer-events-none -mr-16 -mt-16"></div>
+
+            <form class="z-10 relative space-y-10" id="demo-form" onsubmit="event.preventDefault(); const btn = document.getElementById('submit-btn'); const btnText = document.getElementById('btn-text'); const btnLoader = document.getElementById('btn-loader'); const btnArrow = document.getElementById('btn-arrow'); const success = document.getElementById('success-message'); btn.setAttribute('disabled', 'true'); btnText.classList.add('opacity-0'); btnArrow.classList.add('opacity-0'); btnLoader.classList.remove('hidden'); setTimeout(() =&gt; { btn.classList.add('hidden'); success.classList.remove('hidden'); }, 1500);">
+              <!-- Name & Email Row -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- Name Field -->
+                <div class="group relative">
+                  <input type="text" id="name" required="" class="peer w-full bg-transparent border-b border-white/10 py-3 text-white placeholder-transparent focus:border-orange-500 focus:outline-none transition-colors text-lg" placeholder="Name">
+                  <label for="name" class="absolute left-0 -top-5 text-xs text-zinc-500 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-zinc-400 peer-placeholder-shown:top-3 peer-focus:-top-5 peer-focus:text-[10px] peer-focus:text-orange-500 uppercase tracking-wider font-medium cursor-text">
+                    Name
+                    <span class="text-orange-500">*</span>
+                  </label>
+                </div>
+
+                <!-- Email Field -->
+                <div class="group relative">
+                  <input type="email" required="" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" title="Please enter a valid email address" class="peer w-full bg-transparent border-b border-white/10 py-3 text-white placeholder-transparent focus:border-orange-500 focus:outline-none transition-colors text-lg" placeholder="Email" id="email">
+                  <label for="email" class="absolute left-0 -top-5 text-xs text-zinc-500 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-zinc-400 peer-placeholder-shown:top-3 peer-focus:-top-5 peer-focus:text-[10px] peer-focus:text-orange-500 uppercase tracking-wider font-medium cursor-text">
+                    Work Email
+                    <span class="text-orange-500">*</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Phone & Organization Row -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- Phone Field (Composite) -->
+                <div class="group relative">
+                  <label for="phone" class="absolute -top-5 left-0 text-[10px] text-zinc-500 uppercase tracking-wider font-medium">
+                    Phone (Optional)
+                  </label>
+                  <div class="flex items-center border-b border-white/10 focus-within:border-orange-500 transition-colors h-full">
+                    <div class="shrink-0 relative">
+                      <select class="appearance-none focus:outline-none cursor-pointer border-none -translate-x-2 text-base text-zinc-300 bg-transparent w-[90px] ring-0 pt-3 pr-3 pb-3 pl-2" id="country-code">
+                        <option value="+971" selected="">🇦🇪 +971</option>
+                        <option value="+1">🇺🇸 +1</option>
+                        <option value="+1">🇨🇦 +1</option>
+                        <option value="+44">🇬🇧 +44</option>
+                        <option value="+353">🇮🇪 +353</option>
+                        <option value="+49">🇩🇪 +49</option>
+                        <option value="+33">🇫🇷 +33</option>
+                        <option value="+31">🇳🇱 +31</option>
+                        <option value="+41">🇨🇭 +41</option>
+                        <option value="+39">🇮🇹 +39</option>
+                        <option value="+34">🇪🇸 +34</option>
+                        <option value="+351">🇵🇹 +351</option>
+                        <option value="+46">🇸🇪 +46</option>
+                        <option value="+47">🇳🇴 +47</option>
+                        <option value="+45">🇩🇰 +45</option>
+                        <option value="+48">🇵🇱 +48</option>
+                        <option value="+40">🇷🇴 +40</option>
+                        <option value="+380">🇺🇦 +380</option>
+                        <option value="+7">🇷🇺 +7</option>
+                        <option value="+90">🇹🇷 +90</option>
+                        <option value="+91">🇮🇳 +91</option>
+                        <option value="+92">🇵🇰 +92</option>
+                        <option value="+880">🇧🇩 +880</option>
+                        <option value="+94">🇱🇰 +94</option>
+                        <option value="+977">🇳🇵 +977</option>
+                        <option value="+93">🇦🇫 +93</option>
+                        <option value="+966">🇸🇦 +966</option>
+                        <option value="+974">🇶🇦 +974</option>
+                        <option value="+968">🇴🇲 +968</option>
+                        <option value="+965">🇰🇼 +965</option>
+                        <option value="+973">🇧🇭 +973</option>
+                        <option value="+65">🇸🇬 +65</option>
+                        <option value="+60">🇲🇾 +60</option>
+                        <option value="+62">🇮🇩 +62</option>
+                        <option value="+63">🇵🇭 +63</option>
+                        <option value="+66">🇹🇭 +66</option>
+                        <option value="+84">🇻🇳 +84</option>
+                        <option value="+86">🇨🇳 +86</option>
+                        <option value="+81">🇯🇵 +81</option>
+                        <option value="+82">🇰🇷 +82</option>
+                        <option value="+7">🇰🇿 +7</option>
+                        <option value="+998">🇺🇿 +998</option>
+                        <option value="+994">🇦🇿 +994</option>
+                        <option value="+995">🇬🇪 +995</option>
+                        <option value="+374">🇦🇲 +374</option>
+                        <option value="+27">🇿🇦 +27</option>
+                        <option value="+216">🇹🇳 +216</option>
+                        <option value="+20">🇪🇬 +20</option>
+                        <option value="+234">🇳🇬 +234</option>
+                        <option value="+254">🇰🇪 +254</option>
+                        <option value="+233">🇬🇭 +233</option>
+                        <option value="+251">🇪🇹 +251</option>
+                        <option value="+61">🇦🇺 +61</option>
+                        <option value="+64">🇳🇿 +64</option>
+                      </select>
+                      <!-- Custom Caret -->
+                      <div class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="m6 9 6 6 6-6"></path>
+                        </svg>
+                      </div>
+                    </div>
+                    <input type="tel" class="border-none placeholder-zinc-700 focus:ring-0 focus:outline-none text-base text-white bg-transparent w-full h-full pt-3 pb-3 pl-3" placeholder="50 123 4567" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" maxlength="10" inputmode="numeric" pattern="[0-9]*" id="phone">
+                  </div>
+                </div>
+
+                <!-- Organization Field -->
+                <div class="group relative">
+                  <input type="text" id="organization" required="" class="peer w-full bg-transparent border-b border-white/10 py-3 text-white placeholder-transparent focus:border-orange-500 focus:outline-none transition-colors text-lg" placeholder="Organization">
+                  <label for="organization" class="absolute left-0 -top-5 text-xs text-zinc-500 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-zinc-400 peer-placeholder-shown:top-3 peer-focus:-top-5 peer-focus:text-[10px] peer-focus:text-orange-500 uppercase tracking-wider font-medium cursor-text">
+                    Organization
+                    <span class="text-orange-500">*</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Message Field -->
+              <div class="group relative">
+                <textarea id="message" rows="3" class="peer w-full bg-transparent border-b border-white/10 py-3 text-white placeholder-transparent focus:border-orange-500 focus:outline-none transition-colors text-lg resize-none" placeholder="Anything we should know?"></textarea>
+                <label for="message" class="absolute left-0 -top-5 text-xs text-zinc-500 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-zinc-400 peer-placeholder-shown:top-3 peer-focus:-top-5 peer-focus:text-[10px] peer-focus:text-orange-500 uppercase tracking-wider font-medium cursor-text">
+                  Anything we should know?
+                </label>
+              </div>
+
+              <!-- Submit Button & Success Message -->
+              <div class="flex flex-col items-end gap-6 pt-4">
+                <button type="submit" class="group flex gap-3 uppercase hover:bg-zinc-200 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed md:w-auto text-xs font-semibold text-black tracking-widest bg-white w-full pt-4 pr-10 pb-4 pl-10 relative gap-x-3 gap-y-3 items-center justify-center rounded-sm" id="submit-btn">
+                  <span class="" id="btn-text">Book Demo</span>
+                  <!-- Loading Spinner -->
+                  <svg id="btn-loader" class="hidden absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 text-zinc-800 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <!-- Arrow Icon -->
+                  <svg id="btn-arrow" class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"></path>
+                    <path d="m12 5 7 7-7 7"></path>
+                  </svg>
+                </button>
+
+                <!-- Success Message -->
+                <div id="success-message" class="hidden w-full bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 flex items-center gap-3 text-emerald-400">
+                  <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M20 6 9 17l-5-5"></path>
+                    </svg>
+                  </div>
+                  <span class="text-sm font-medium">
+                    Thank you! Our team will reach out shortly.
+                  </span>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer class="z-20 bg-zinc-900/30 w-full border-white/5 border-t pt-24 pb-8 relative backdrop-blur-sm">
+      <div class="w-full max-w-7xl mr-auto ml-auto pr-6 pl-6">
+        <div class="grid lg:grid-cols-12 gap-16 mb-24">
+          <!-- Brand Column -->
+          <div class="lg:col-span-5 flex flex-col">
+            <!-- Geometric Grid Logo -->
+
+            <h3 class="mb-4">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2bcdd201-cf91-4148-b0a2-fe375ba529d0_800w.png" alt="TERN" class="w-auto h-12 object-contain rounded-full">
+            </h3>
+            <p class="text-sm text-zinc-500 max-w-xs">
+              Clinical AI Workforce Operating System
+            </p>
+          </div>
+
+          <!-- Links Columns -->
+          <div class="lg:col-span-7">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-10">
+              <div class="flex flex-col gap-8">
+                <h4 class="text-base font-medium text-white font-manrope">
+                  About Us
+                </h4>
+                <div class="flex flex-col gap-4">
+                  <a href="platform.html" class="hover:text-white transition-colors text-sm text-zinc-400">
+                    Platform
+                  </a>
+                  <a href="#" class="hover:text-white transition-colors text-sm text-zinc-400">
+                    Team
+                  </a>
+                  <a href="#" class="hover:text-white transition-colors text-sm text-zinc-400">
+                    Company
+                  </a><a href="security.html" class="hover:text-white transition-colors text-sm text-zinc-400">Security</a>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-8">
+                <h4 class="text-base font-medium text-white font-manrope">
+                  Support
+                </h4>
+                <div class="flex flex-col gap-4">
+                  <a href="book-a-demo.html" class="hover:text-white transition-colors text-sm text-zinc-400">
+                    Contact Us
+                  </a>
+                  <a href="book-a-demo.html" class="hover:text-white transition-colors text-sm text-zinc-400">
+                    Book A Demo
+                  </a>
+                  <a href="book-a-demo.html" class="hover:text-white transition-colors text-sm text-zinc-400">
+                    Request Technical Briefing
+                  </a>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-8">
+                <h4 class="text-base font-medium text-white font-manrope">
+                  Social
+                </h4>
+                <div class="flex flex-col gap-4">
+                  <a href="https://www.instagram.com/terngroup/" class="group flex items-center gap-3 hover:text-white transition-colors text-sm text-zinc-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24" data-icon="simple-icons:instagram" class="">
+                      <path fill="currentColor" d="M7.03.084c-1.277.06-2.149.264-2.91.563a5.9 5.9 0 0 0-2.124 1.388a5.9 5.9 0 0 0-1.38 2.127C.321 4.926.12 5.8.064 7.076s-.069 1.688-.063 4.947s.021 3.667.083 4.947c.061 1.277.264 2.149.563 2.911c.308.789.72 1.457 1.388 2.123a5.9 5.9 0 0 0 2.129 1.38c.763.295 1.636.496 2.913.552c1.278.056 1.689.069 4.947.063s3.668-.021 4.947-.082c1.28-.06 2.147-.265 2.91-.563a5.9 5.9 0 0 0 2.123-1.388a5.9 5.9 0 0 0 1.38-2.129c.295-.763.496-1.636.551-2.912c.056-1.28.07-1.69.063-4.948c-.006-3.258-.02-3.667-.081-4.947c-.06-1.28-.264-2.148-.564-2.911a5.9 5.9 0 0 0-1.387-2.123a5.9 5.9 0 0 0-2.128-1.38c-.764-.294-1.636-.496-2.914-.55C15.647.009 15.236-.006 11.977 0S8.31.021 7.03.084m.14 21.693c-1.17-.05-1.805-.245-2.228-.408a3.7 3.7 0 0 1-1.382-.895a3.7 3.7 0 0 1-.9-1.378c-.165-.423-.363-1.058-.417-2.228c-.06-1.264-.072-1.644-.08-4.848c-.006-3.204.006-3.583.061-4.848c.05-1.169.246-1.805.408-2.228c.216-.561.477-.96.895-1.382a3.7 3.7 0 0 1 1.379-.9c.423-.165 1.057-.361 2.227-.417c1.265-.06 1.644-.072 4.848-.08c3.203-.006 3.583.006 4.85.062c1.168.05 1.804.244 2.227.408c.56.216.96.475 1.382.895s.681.817.9 1.378c.165.422.362 1.056.417 2.227c.06 1.265.074 1.645.08 4.848c.005 3.203-.006 3.583-.061 4.848c-.051 1.17-.245 1.805-.408 2.23c-.216.56-.477.96-.896 1.38a3.7 3.7 0 0 1-1.378.9c-.422.165-1.058.362-2.226.418c-1.266.06-1.645.072-4.85.079s-3.582-.006-4.848-.06m9.783-16.192a1.44 1.44 0 1 0 1.437-1.442a1.44 1.44 0 0 0-1.437 1.442M5.839 12.012a6.161 6.161 0 1 0 12.323-.024a6.162 6.162 0 0 0-12.323.024M8 12.008A4 4 0 1 1 12.008 16A4 4 0 0 1 8 12.008" class=""></path>
+                    </svg>
+                    Instagram
+                  </a>
+                  <a href="https://www.linkedin.com/company/terngroup/" class="group flex items-center gap-3 hover:text-white transition-colors text-sm text-zinc-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24" data-icon="simple-icons:linkedin" class="">
+                      <path fill="currentColor" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037c-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85c3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.06 2.06 0 0 1-2.063-2.065a2.064 2.064 0 1 1 2.063 2.065m1.782 13.019H3.555V9h3.564zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0z" class=""></path>
+                    </svg>
+                    LinkedIn
+                  </a>
+                  <a href="https://www.youtube.com/@TERN-Group" class="group flex items-center gap-3 hover:text-white transition-colors text-sm text-zinc-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24" data-icon="simple-icons:youtube" class="">
+                      <path fill="currentColor" d="M23.498 6.186a3.02 3.02 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.02 3.02 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.02 3.02 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.02 3.02 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814M9.545 15.568V8.432L15.818 12z" class=""></path>
+                    </svg>
+                    YouTube
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
+          <p class="text-xs text-zinc-500">Copyright © TERN Group</p>
+
+          <div class="flex items-center gap-10">
+            <a href="#" class="text-xs text-zinc-500 hover:text-white transition-colors font-sans">
+              Terms of Service
+            </a>
+            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="group flex hover:text-white transition-colors uppercase text-xs text-zinc-500 tracking-wider gap-x-3 gap-y-3 items-center">
+              Back to top
+              <div class="w-6 h-6 rounded border border-zinc-800 flex items-center justify-center group-hover:border-zinc-600 group-hover:bg-zinc-800 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24" data-icon="solar:arrow-up-bold-duotone" class="">
+                  <path fill="currentColor" fill-rule="evenodd" d="M12 20.75a.75.75 0 0 0 .75-.75v-9.25h-1.5V20c0 .414.336.75.75.75" clip-rule="evenodd" opacity=".5"></path>
+                  <path fill="currentColor" d="M6 10.75a.75.75 0 0 1-.53-1.28l6-6a.75.75 0 0 1 1.06 0l6 6a.75.75 0 0 1-.53 1.28z"></path>
+                </svg>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  
+</body></html>

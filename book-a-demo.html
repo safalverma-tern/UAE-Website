@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en" class="dark"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TERN - Global Workforce Operating System</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Inter', sans-serif; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Manrope', sans-serif; }
+/* Smooth Scrolling */
+html { scroll-behavior: smooth; }
+/* Animation Keyframes */
+@keyframes fadeSlideIn {
+0% { opacity: 0; transform: translateY(20px); }
+100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes glow {
+0%, 100% { opacity: 0.5; transform: scale(1); }
+50% { opacity: 0.8; transform: scale(1.1); }
+}
+.animate-fade-in { animation: fadeSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+/* Custom Utilities */
+.glass-card {
+background: rgba(24, 24, 27, 0.4);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.text-gradient {
+background: linear-gradient(to right, #fff, #a1a1aa);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+</style>
+<link id="all-fonts-link-font-geist" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist">
+.font-geist { font-family: 'Geist', sans-serif !important; }
+</style><link id="all-fonts-link-font-roboto" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-roboto">
+.font-roboto { font-family: 'Roboto', sans-serif !important; }
+</style><link id="all-fonts-link-font-montserrat" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-montserrat">
+.font-montserrat { font-family: 'Montserrat', sans-serif !important; }
+</style><link id="all-fonts-link-font-poppins" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-poppins">
+.font-poppins { font-family: 'Poppins', sans-serif !important; }
+</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&amp;display=swap"><style id="all-fonts-style-font-playfair">
+.font-playfair { font-family: 'Playfair Display', serif !important; }
+</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-instrument-serif">
+.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }
+</style><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&amp;display=swap"><style id="all-fonts-style-font-merriweather">
+.font-merriweather { font-family: 'Merriweather', serif !important; }
+</style><link id="all-fonts-link-font-bricolage" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-bricolage">
+.font-bricolage { font-family: 'Bricolage Grotesque', sans-serif !important; }
+</style><link id="all-fonts-link-font-jakarta" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-jakarta">
+.font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+</style><link id="all-fonts-link-font-space-grotesk" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-space-grotesk">
+.font-space-grotesk { font-family: 'Space Grotesk', sans-serif !important; }
+</style><link id="all-fonts-link-font-work-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-work-sans">
+.font-work-sans { font-family: 'Work Sans', sans-serif !important; }
+</style><link id="all-fonts-link-font-pt-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-pt-serif">
+.font-pt-serif { font-family: 'PT Serif', serif !important; }
+</style><link id="all-fonts-link-font-geist-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-geist-mono">
+.font-geist-mono { font-family: 'Geist Mono', monospace !important; }
+</style><link id="all-fonts-link-font-space-mono" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;display=swap"><style id="all-fonts-style-font-space-mono">
+.font-space-mono { font-family: 'Space Mono', monospace !important; }
+</style><link id="all-fonts-link-font-quicksand" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-quicksand">
+.font-quicksand { font-family: 'Quicksand', sans-serif !important; }
+</style><link id="all-fonts-link-font-nunito" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&amp;display=swap"><style id="all-fonts-style-font-nunito">
+.font-nunito { font-family: 'Nunito', sans-serif !important; }
+</style><link id="all-fonts-link-font-newsreader" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400..800&amp;display=swap"><style id="all-fonts-style-font-newsreader">
+.font-newsreader { font-family: 'Newsreader', serif !important; }
+</style><link id="all-fonts-link-font-google-sans-flex" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-google-sans-flex">
+.font-google-sans-flex { font-family: 'Google Sans Flex', sans-serif !important; }
+</style><link id="all-fonts-link-font-oswald" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-oswald">
+.font-oswald { font-family: 'Oswald', sans-serif !important; }
+</style><link id="all-fonts-link-font-dm-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-dm-sans">
+.font-dm-sans { font-family: 'DM Sans', sans-serif !important; }
+</style><link id="all-fonts-link-font-cormorant" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-cormorant">
+.font-cormorant { font-family: 'Cormorant Garamond', serif !important; }
+</style><style id="border-gradient-shared-style">
+[style*="--border-gradient"]::before {
+content: "";
+position: absolute;
+inset: 0;
+padding: 1px;
+border-radius: var(--border-radius-before, inherit);
+-webkit-mask: linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite: xor;
+mask-composite: exclude;
+background: var(--border-gradient);
+pointer-events: none;
+}</style></head>
+  <body class="antialiased overflow-x-hidden selection:bg-orange-500/30 selection:text-orange-200 text-zinc-400 bg-black">
+    <div class="aura-background-component fixed z-0 pointer-events-none opacity-50 mix-blend-screen w-full h-screen top-0 saturate-0 brightness-50" data-alpha-mask="80" style="mask-image: linear-gradient(180deg, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(180deg, transparent, black 0%, black 80%, transparent);">
+      <div class="aura-background-component top-0 w-full -z-10 absolute h-full">
+        <div data-us-project="bKN5upvoulAmWvInmHza" class="absolute w-full h-full left-0 top-0 -z-10"></div>
+        <script type="text/javascript">
+          !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
+        </script>
+      </div>
+    </div>
+    <!-- Ambient Background Noise & Gradients -->
+    <div class="fixed z-0 inset-0 pointer-events-none">
+      <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+      <div class="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-orange-500/10 rounded-full blur-[120px] mix-blend-screen"></div>
+      <div class="absolute bottom-[-10%] right-[10%] w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px] mix-blend-screen"></div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="fixed flex z-50 w-full pt-6 pr-4 pl-4 top-0 left-0 justify-center">
+      <nav class="flex md:gap-12 md:w-auto shadow-black/50 md:pl-6 md:gap-x-8 z-50 group bg-black/60 w-full max-w-5xl rounded-full pt-2 pr-2 pb-2 pl-4 shadow-2xl backdrop-blur-xl gap-x-3 gap-y-8 items-center justify-between" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2)); --border-radius-before: 9999px">
+  <div class="flex items-center gap-2 shrink-0">
+    <span class="text-base font-medium tracking-tight flex items-center text-white" onclick="window.location.href='home-page.html'" role="button">
+      <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2bcdd201-cf91-4148-b0a2-fe375ba529d0_1600w.png?w=800&amp;q=80" alt="TERN" class="cursor-pointer w-auto h-7 object-contain rounded-full" onclick="window.location.href='home-page.html';window.location.href='index.html';window.location.href='index.html'" role="button">
+    </span>
+  </div>
+
+  <!-- Desktop Navigation -->
+  <div class="hidden md:flex items-center gap-6">
+    <a href="index.html" class="transition-colors hover:text-white text-xs font-medium text-gray-400">Home</a>
+    <a href="platform.html" class="transition-colors text-xs font-medium hover:text-white text-gray-400">Platform</a>
+    <a href="security.html" class="transition-colors text-xs font-medium hover:text-white text-gray-400">Security</a>
+    <a href="#" class="transition-colors text-xs font-medium hover:text-white text-gray-400">Company</a>
+  </div>
+
+  <div class="flex items-center gap-2 md:gap-4 shrink-0">
+    <!-- Action Button -->
+    <button class="group/btn inline-flex overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_25px_rgba(255,255,255,0.1)] rounded-full pt-[1px] pr-[1px] pb-[1px] pl-[1px] relative items-center justify-center" onclick="window.location.href='book-a-demo.html'" role="button">
+      <!-- Spinning Border Beam -->
+      <span class="absolute inset-[-100%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,transparent_75%,#ffffff_100%)] opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100"></span>
+      <!-- Default Static Border -->
+      <span class="transition-opacity duration-300 group-hover/btn:opacity-0 rounded-full absolute top-0 right-0 bottom-0 left-0 bg-zinc-800"></span>
+      <!-- Button Content -->
+      <span class="flex items-center justify-center gap-2 uppercase transition-colors duration-300 group-hover/btn:text-white text-xs font-medium tracking-widest bg-gradient-to-b w-full h-full rounded-full pt-2.5 px-4 md:pr-6 pb-2.5 md:pl-6 relative shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] text-zinc-400 from-zinc-800 to-zinc-950">
+        <span class="relative z-10 whitespace-nowrap">Book Demo</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="relative z-10 transition-transform duration-300 group-hover/btn:translate-x-0.5">
+          <path d="M5 12h14"></path>
+          <path d="m12 5 7 7-7 7"></path>
+        </svg>
+      </span>
+    </button>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="md:hidden relative flex items-center justify-center w-9 h-9 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 transition-all border border-transparent hover:border-white/5" onclick="const menu = document.getElementById('mobile-drawer'); const icon = this.querySelector('svg'); const isOpen = !menu.classList.contains('hidden'); if(isOpen) { menu.classList.remove('opacity-100', 'translate-y-0'); menu.classList.add('opacity-0', '-translate-y-2'); setTimeout(() =&gt; menu.classList.add('hidden'), 300); } else { menu.classList.remove('hidden'); setTimeout(() =&gt; { menu.classList.remove('opacity-0', '-translate-y-2'); menu.classList.add('opacity-100', 'translate-y-0'); }, 10); }">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="4" x2="20" y1="12" y2="12"></line>
+        <line x1="4" x2="20" y1="6" y2="6"></line>
+        <line x1="4" x2="20" y1="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile Drawer Overlay -->
+  <div id="mobile-drawer" class="hidden absolute top-[calc(100%+8px)] left-0 right-0 p-1.5 z-50 transform transition-all duration-300 ease-out opacity-0 -translate-y-2 origin-top">
+    <div class="bg-black/90 backdrop-blur-xl border border-white/5 rounded-[2rem] p-4 flex flex-col shadow-2xl overflow-hidden">
+      <a href="home-page.html" class="flex items-center justify-between p-4 rounded-2xl hover:bg-white/5 transition-colors group">
+        <span class="text-sm font-medium text-zinc-300 group-hover:text-white">Home</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-600 group-hover:text-white transition-colors">
+          <path d="m9 18 6-6-6-6"></path>
+        </svg>
+      </a>
+      <div class="h-px w-full bg-white/5 mx-auto"></div>
+      <a href="platform.html" class="flex items-center justify-between p-4 rounded-2xl hover:bg-white/5 transition-colors group">
+        <span class="text-sm font-medium text-zinc-300 group-hover:text-white">Platform</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-600 group-hover:text-white transition-colors">
+          <path d="m9 18 6-6-6-6"></path>
+        </svg>
+      </a>
+      <div class="h-px w-full bg-white/5 mx-auto"></div>
+      <a href="security.html" class="flex items-center justify-between p-4 rounded-2xl hover:bg-white/5 transition-colors group">
+        <span class="text-sm font-medium text-zinc-300 group-hover:text-white">Security</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-600 group-hover:text-white transition-colors">
+          <path d="m9 18 6-6-6-6"></path>
+        </svg>
+      </a>
+      <div class="h-px w-full bg-white/5 mx-auto"></div>
+      <a href="#" class="flex items-center justify-between p-4 rounded-2xl hover:bg-white/5 transition-colors group">
+        <span class="text-sm font-medium text-zinc-300 group-hover:text-white">Company</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-600 group-hover:text-white transition-colors">
+          <path d="m9 18 6-6-6-6"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</nav>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="md:pl-6 md:pr-6 md:pb-0 md:pt-30 z-10 pt-40 pr-6 pb-2 pl-6 relative" id="home"></section>
+
+    <!-- Social Proof -->
+
+    <!-- Features Grid -->
+
+    <!-- Feature Split Section -->
+
+    <!-- Stats Section -->
+
+    <!-- ORIGINAL CONTENT: Contact / Demo Section (Preserved) -->
+    <section class="w-full max-w-7xl z-20 mr-auto ml-auto pt-0 pr-6 pb-20 pl-6 relative" id="contact">
+      <div class="grid lg:grid-cols-12 gap-16 items-start">
+        <!-- CTA Text Side -->
+        <div class="lg:col-span-5 pt-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-orange-500/20 bg-orange-500/5 mb-6">
+            <span class="text-xs font-semibold text-orange-400 uppercase tracking-widest">
+              Contact Sales
+            </span>
+          </div>
+          <h2 class="text-5xl md:text-6xl font-medium text-white tracking-tighter mb-6 leading-[1.1]">
+            Discuss your workforce requirements.
+          </h2>
+          <p class="leading-relaxed text-lg text-zinc-400 max-w-md">
+            Schedule a technical briefing with our solution architects. We'll
+            map out your global hiring strategy.
+          </p>
+
+          <div class="mt-12 space-y-6">
+            <div class="flex items-center gap-4 text-zinc-400">
+              <div class="w-10 h-10 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="check" class="lucide lucide-check w-5 h-5 text-white"><path d="M20 6 9 17l-5-5"></path></svg>
+              </div>
+              <span class="text-sm">Custom pricing for enterprise volumes</span>
+            </div>
+            
+            
+          </div>
+        </div>
+
+        <!-- Form Side -->
+        <div class="lg:col-span-7 relative">
+          <!-- Form Container -->
+          <div class="md:p-10 overflow-hidden bg-zinc-900/40 border-white/10 border rounded-3xl pt-8 pr-8 pb-8 pl-8 relative shadow-2xl backdrop-blur-xl">
+  <!-- Background Gradient -->
+  <div class="absolute top-0 right-0 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl -z-10 pointer-events-none -mr-16 -mt-16">
+  </div>
+
+  <form id="demo-form" class="space-y-10 relative z-10" onsubmit="handleDemoSubmit(event)">
+    <!-- Name & Email Row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <!-- Name Field -->
+      <div class="group relative">
+        <input type="text" id="name" required="" class="peer w-full bg-transparent border-b border-white/10 py-3 text-white placeholder-transparent focus:border-orange-500 focus:outline-none transition-colors text-lg" placeholder="Name">
+        <label for="name" class="absolute left-0 -top-5 text-xs text-zinc-500 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-zinc-400 peer-placeholder-shown:top-3 peer-focus:-top-5 peer-focus:text-[10px] peer-focus:text-orange-500 uppercase tracking-wider font-medium cursor-text">
+                    Name
+                    <span class="text-orange-500">*</span>
+                  </label>
+      </div>
+
+      <!-- Email Field -->
+      <div class="group relative">
+        <input type="email" id="email" required="" class="peer w-full bg-transparent border-b border-white/10 py-3 text-white placeholder-transparent focus:border-orange-500 focus:outline-none transition-colors text-lg" placeholder="Email">
+        <label for="email" class="absolute left-0 -top-5 text-xs text-zinc-500 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-zinc-400 peer-placeholder-shown:top-3 peer-focus:-top-5 peer-focus:text-[10px] peer-focus:text-orange-500 uppercase tracking-wider font-medium cursor-text">
+                    Work Email
+                    <span class="text-orange-500">*</span>
+                  </label>
+      </div>
+    </div>
+
+    <!-- Phone & Organization Row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <!-- Phone Field (Composite) -->
+      <div class="group relative">
+        <label for="phone" class="absolute -top-5 left-0 text-[10px] text-zinc-500 uppercase tracking-wider font-medium">
+                    Phone (Optional)
+                  </label>
+        <div class="flex items-center border-b border-white/10 focus-within:border-orange-500 transition-colors h-full">
+          <div class="relative shrink-0">
+            <select id="country-code" class="appearance-none bg-transparent text-zinc-300 text-lg focus:outline-none pr-6 cursor-pointer py-3 border-none ring-0 w-[110px]">
+                        <option value="+971" selected="">🇦🇪 +971</option>
+                        <option value="+1">🇺🇸 +1</option>
+                        <option value="+44">🇬🇧 +44</option>
+                        <option value="+91">🇮🇳 +91</option>
+                        <option value="+65">🇸🇬 +65</option>
+                        <option value="+966">🇸🇦 +966</option>
+                      </select>
+            <!-- Custom Caret -->
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </div>
+          </div>
+          <input type="tel" id="phone" class="w-full bg-transparent border-none py-3 pl-4 text-white placeholder-zinc-700 focus:ring-0 focus:outline-none text-lg h-full" placeholder="50 123 4567" oninput="this.value = this.value.replace(/[^0-9]/g, '')" inputmode="numeric" pattern="[0-9]*">
+        </div>
+      </div>
+
+      <!-- Organization Field -->
+      <div class="group relative">
+        <input type="text" id="organization" required="" class="peer w-full bg-transparent border-b border-white/10 py-3 text-white placeholder-transparent focus:border-orange-500 focus:outline-none transition-colors text-lg" placeholder="Organization">
+        <label for="organization" class="absolute left-0 -top-5 text-xs text-zinc-500 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-zinc-400 peer-placeholder-shown:top-3 peer-focus:-top-5 peer-focus:text-[10px] peer-focus:text-orange-500 uppercase tracking-wider font-medium cursor-text">
+                    Organization
+                    <span class="text-orange-500">*</span>
+                  </label>
+      </div>
+    </div>
+
+    <!-- Message Field -->
+    <div class="group relative">
+      <textarea id="message" rows="3" class="peer w-full bg-transparent border-b border-white/10 py-3 text-white placeholder-transparent focus:border-orange-500 focus:outline-none transition-colors text-lg resize-none" placeholder="Anything we should know?"></textarea>
+      <label for="message" class="absolute left-0 -top-5 text-xs text-zinc-500 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-zinc-400 peer-placeholder-shown:top-3 peer-focus:-top-5 peer-focus:text-[10px] peer-focus:text-orange-500 uppercase tracking-wider font-medium cursor-text">
+                  Anything we should know?
+                </label>
+    </div>
+
+    <!-- Submit Button & Success Message -->
+    <div class="flex flex-col items-end gap-6 pt-4">
+      <button type="submit" class="group flex gap-3 uppercase hover:bg-zinc-200 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed md:w-auto text-xs font-semibold text-black tracking-widest bg-white w-full pt-4 pr-10 pb-4 pl-10 relative gap-x-3 gap-y-3 items-center justify-center rounded-sm" id="submit-btn">
+                  <span class="" id="btn-text">Book Demo</span>
+                  <!-- Loading Spinner -->
+                  <svg id="btn-loader" class="hidden w-4 h-4 text-zinc-800 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <!-- Arrow Icon -->
+                  <svg id="btn-arrow" class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"></path>
+                    <path d="m12 5 7 7-7 7"></path>
+                  </svg>
+                </button>
+
+      <!-- Success Message -->
+      <div id="success-message" class="hidden w-full bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 flex items-center gap-3 text-emerald-400">
+        <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6 9 17l-5-5"></path>
+          </svg>
+        </div>
+        <span class="text-sm font-medium">
+                    Thank you! Our team will reach out shortly.
+                  </span>
+      </div>
+    </div>
+  </form>
+</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="z-20 bg-zinc-900/30 w-full border-white/5 border-t pt-24 pb-8 relative backdrop-blur-sm">
+  <div class="w-full max-w-7xl mr-auto ml-auto pr-6 pl-6">
+    <div class="grid lg:grid-cols-12 gap-16 mb-24">
+      <!-- Brand Column -->
+      <div class="lg:col-span-5 flex flex-col">
+        <!-- Geometric Grid Logo -->
+
+        <h3 class="mb-4">
+          <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2bcdd201-cf91-4148-b0a2-fe375ba529d0_800w.png" alt="TERN" class="w-auto h-12 object-contain rounded-full">
+        </h3>
+        <p class="text-sm text-zinc-500 max-w-xs">
+          Clinical AI Workforce Operating System
+        </p>
+      </div>
+
+      <!-- Links Columns -->
+      <div class="lg:col-span-7">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-10">
+          <div class="flex flex-col gap-8">
+            <h4 class="text-base font-medium text-white font-manrope">
+              About Us
+            </h4>
+            <div class="flex flex-col gap-4">
+              <a href="platform.html" class="hover:text-white transition-colors text-sm text-zinc-400">
+                Platform
+              </a>
+              <a href="#" class="hover:text-white transition-colors text-sm text-zinc-400">
+                Team
+              </a>
+              <a href="security.html" class="hover:text-white transition-colors text-sm text-zinc-400">Security</a><a href="#" class="hover:text-white transition-colors text-sm text-zinc-400">
+                Company
+              </a>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-8">
+            <h4 class="text-base font-medium text-white font-manrope">
+              Support
+            </h4>
+            <div class="flex flex-col gap-4">
+              <a href="book-a-demo.html" class="hover:text-white transition-colors text-sm text-zinc-400">
+                Contact Us
+              </a>
+              <a href="book-a-demo.html" class="hover:text-white transition-colors text-sm text-zinc-400">
+                Book A Demo
+              </a>
+              <a href="book-a-demo.html" class="hover:text-white transition-colors text-sm text-zinc-400">
+                Request Technical Briefing
+              </a>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-8">
+            <h4 class="text-base font-medium text-white font-manrope">
+              Social
+            </h4>
+            <div class="flex flex-col gap-4">
+              <a href="https://www.instagram.com/terngroup/" class="group flex items-center gap-3 hover:text-white transition-colors text-sm text-zinc-400">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24" data-icon="simple-icons:instagram" class="">
+                  <path fill="currentColor" d="M7.03.084c-1.277.06-2.149.264-2.91.563a5.9 5.9 0 0 0-2.124 1.388a5.9 5.9 0 0 0-1.38 2.127C.321 4.926.12 5.8.064 7.076s-.069 1.688-.063 4.947s.021 3.667.083 4.947c.061 1.277.264 2.149.563 2.911c.308.789.72 1.457 1.388 2.123a5.9 5.9 0 0 0 2.129 1.38c.763.295 1.636.496 2.913.552c1.278.056 1.689.069 4.947.063s3.668-.021 4.947-.082c1.28-.06 2.147-.265 2.91-.563a5.9 5.9 0 0 0 2.123-1.388a5.9 5.9 0 0 0 1.38-2.129c.295-.763.496-1.636.551-2.912c.056-1.28.07-1.69.063-4.948c-.006-3.258-.02-3.667-.081-4.947c-.06-1.28-.264-2.148-.564-2.911a5.9 5.9 0 0 0-1.387-2.123a5.9 5.9 0 0 0-2.128-1.38c-.764-.294-1.636-.496-2.914-.55C15.647.009 15.236-.006 11.977 0S8.31.021 7.03.084m.14 21.693c-1.17-.05-1.805-.245-2.228-.408a3.7 3.7 0 0 1-1.382-.895a3.7 3.7 0 0 1-.9-1.378c-.165-.423-.363-1.058-.417-2.228c-.06-1.264-.072-1.644-.08-4.848c-.006-3.204.006-3.583.061-4.848c.05-1.169.246-1.805.408-2.228c.216-.561.477-.96.895-1.382a3.7 3.7 0 0 1 1.379-.9c.423-.165 1.057-.361 2.227-.417c1.265-.06 1.644-.072 4.848-.08c3.203-.006 3.583.006 4.85.062c1.168.05 1.804.244 2.227.408c.56.216.96.475 1.382.895s.681.817.9 1.378c.165.422.362 1.056.417 2.227c.06 1.265.074 1.645.08 4.848c.005 3.203-.006 3.583-.061 4.848c-.051 1.17-.245 1.805-.408 2.23c-.216.56-.477.96-.896 1.38a3.7 3.7 0 0 1-1.378.9c-.422.165-1.058.362-2.226.418c-1.266.06-1.645.072-4.85.079s-3.582-.006-4.848-.06m9.783-16.192a1.44 1.44 0 1 0 1.437-1.442a1.44 1.44 0 0 0-1.437 1.442M5.839 12.012a6.161 6.161 0 1 0 12.323-.024a6.162 6.162 0 0 0-12.323.024M8 12.008A4 4 0 1 1 12.008 16A4 4 0 0 1 8 12.008" class="">
+                  </path>
+                </svg>
+                Instagram
+              </a>
+              <a href="https://www.linkedin.com/company/terngroup/" class="group flex items-center gap-3 hover:text-white transition-colors text-sm text-zinc-400">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24" data-icon="simple-icons:linkedin" class="">
+                  <path fill="currentColor" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037c-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85c3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.06 2.06 0 0 1-2.063-2.065a2.064 2.064 0 1 1 2.063 2.065m1.782 13.019H3.555V9h3.564zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0z" class="">
+                  </path>
+                </svg>
+                LinkedIn
+              </a>
+              <a href="https://www.youtube.com/@TERN-Group" class="group flex items-center gap-3 hover:text-white transition-colors text-sm text-zinc-400">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24" data-icon="simple-icons:youtube" class="">
+                  <path fill="currentColor" d="M23.498 6.186a3.02 3.02 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.02 3.02 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.02 3.02 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.02 3.02 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814M9.545 15.568V8.432L15.818 12z" class=""></path>
+                </svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
+      <p class="text-xs text-zinc-500">Copyright © TERN Group</p>
+
+      <div class="flex items-center gap-10">
+        <a href="#" class="text-xs text-zinc-500 hover:text-white transition-colors font-sans">
+          Terms of Service
+        </a>
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="group flex hover:text-white transition-colors uppercase text-xs text-zinc-500 tracking-wider gap-x-3 gap-y-3 items-center">
+              Back to top
+              <div class="w-6 h-6 rounded border border-zinc-800 flex items-center justify-center group-hover:border-zinc-600 group-hover:bg-zinc-800 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24" data-icon="solar:arrow-up-bold-duotone" class="">
+                  <path fill="currentColor" fill-rule="evenodd" d="M12 20.75a.75.75 0 0 0 .75-.75v-9.25h-1.5V20c0 .414.336.75.75.75" clip-rule="evenodd" opacity=".5"></path>
+                  <path fill="currentColor" d="M6 10.75a.75.75 0 0 1-.53-1.28l6-6a.75.75 0 0 1 1.06 0l6 6a.75.75 0 0 1-.53 1.28z"></path>
+                </svg>
+              </div>
+            </button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+    <!-- Form Handling Script -->
+    <script>
+      // Ensure phone validation enforces digits only
+      document.getElementById('phone')?.addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+      });
+
+      async function handleDemoSubmit(event) {
+        event.preventDefault();
+
+        const form = document.getElementById('demo-form');
+        const btn = document.getElementById('submit-btn');
+        const btnText = document.getElementById('btn-text');
+        const btnLoader = document.getElementById('btn-loader');
+        const btnArrow = document.getElementById('btn-arrow');
+        const successMsg = document.getElementById('success-message');
+
+        if (!form || !btn) return;
+
+        // 1. Set Loading State
+        btn.disabled = true;
+        if (btnText) btnText.textContent = "Processing...";
+        if (btnLoader) btnLoader.classList.remove('hidden');
+        if (btnArrow) btnArrow.classList.add('hidden');
+        if (successMsg) successMsg.classList.add('hidden');
+
+        try {
+          // 2. Simulate API Request
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          // 3. Success State
+          form.reset();
+          if (successMsg) {
+            successMsg.classList.remove('hidden');
+            // Hide success message after 5 seconds
+            setTimeout(() => successMsg.classList.add('hidden'), 5000);
+          }
+
+          // Reset Button
+          btn.disabled = false;
+          if (btnText) btnText.textContent = "Book Demo";
+          if (btnLoader) btnLoader.classList.add('hidden');
+          if (btnArrow) btnArrow.classList.remove('hidden');
+
+        } catch (error) {
+          console.error('Submission failed', error);
+          btn.disabled = false;
+          if (btnText) btnText.textContent = "Try Again";
+          if (btnLoader) btnLoader.classList.add('hidden');
+          if (btnArrow) btnArrow.classList.remove('hidden');
+        }
+      }
+
+      // Initialize Lucide Icons safely
+      if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        lucide.createIcons();
+      }
+    </script>
+  
+</body></html>
